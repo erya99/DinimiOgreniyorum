@@ -26,7 +26,8 @@ val categoryNames = mapOf(
     "MULTI_CHOICE_HARD" to "Zor Sorular",
     "MATCHING" to "Eşleştirme",
     "SURAH_Q" to "Sure Soruları",
-    "SURAH_TEST" to "Sure Testi"
+    "SURAH_TEST" to "Sure Testi",
+    "DAILY_POOL" to "Günün Soruları"
 )
 
 val categoryEmojis = mapOf(
@@ -36,9 +37,9 @@ val categoryEmojis = mapOf(
     "MULTI_CHOICE_HARD" to "🔴",
     "MATCHING" to "🔗",
     "SURAH_Q" to "📖",
-    "SURAH_TEST" to "🕌"
+    "SURAH_TEST" to "🕌",
+    "DAILY_POOL" to "🌙"
 )
-
 @Composable
 fun StatsScreen(
     statsViewModel: StatsViewModel,
