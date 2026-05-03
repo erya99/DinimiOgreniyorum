@@ -1,4 +1,4 @@
-package com.dinimiogreniyorum.app.android.com.dinimiogreniyorum.app.android
+package com.dinimiogreniyorum.app.android
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

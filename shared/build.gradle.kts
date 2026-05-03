@@ -64,6 +64,8 @@ sqldelight {
     databases {
         create("AppDatabase") {
             packageName.set("com.dinimiogreniyorum.db")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(false)
         }
     }
 }

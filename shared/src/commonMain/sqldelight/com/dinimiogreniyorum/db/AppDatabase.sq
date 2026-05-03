@@ -15,6 +15,12 @@ CREATE TABLE UserProgress (
     lastSeen    INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE DailySelection (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    questionId  INTEGER NOT NULL,
+    selectedDate TEXT NOT NULL
+);
+
 selectAllByCategory:
 SELECT * FROM Question WHERE category = ?;
 
@@ -39,13 +45,27 @@ selectTotalQuestions:
 SELECT COUNT(*) FROM Question;
 
 selectTotalAttempts:
-SELECT SUM(attempts) FROM UserProgress;
+SELECT SUM(attempts) AS total FROM UserProgress;
 
 selectTotalCorrect:
-SELECT SUM(correctCount) FROM UserProgress;
+SELECT SUM(correctCount) AS total FROM UserProgress;
 
 selectProgressByCategory:
 SELECT q.category, COUNT(up.questionId) AS attemptedCount, SUM(up.correctCount) AS correctTotal
 FROM Question AS q
 LEFT JOIN UserProgress AS up ON q.id = up.questionId
 GROUP BY q.category;
+
+insertDailySelection:
+INSERT INTO DailySelection(questionId, selectedDate) VALUES (?, ?);
+
+selectDailyQuestions:
+SELECT q.* FROM Question q
+INNER JOIN DailySelection ds ON q.id = ds.questionId
+WHERE ds.selectedDate = ?;
+
+deleteDailySelection:
+DELETE FROM DailySelection;
+
+selectDailyCount:
+SELECT COUNT(*) FROM DailySelection WHERE selectedDate = ?;

@@ -43,14 +43,31 @@ class QuestionRepository(private val database: AppDatabase) {
     }
 
     fun getTotalAttempts(): Long {
-        return queries.selectTotalAttempts().executeAsOne() ?: 0L
+        return queries.selectTotalAttempts().executeAsOne().total ?: 0L
     }
 
     fun getTotalCorrect(): Long {
-        return queries.selectTotalCorrect().executeAsOne() ?: 0L
+        return queries.selectTotalCorrect().executeAsOne().total ?: 0L
     }
 
     fun getProgressByCategory(): List<SelectProgressByCategory> {
         return queries.selectProgressByCategory().executeAsList()
+    }
+
+    // Günlük soru fonksiyonları
+    fun getDailyQuestions(date: String): List<Question> {
+        return queries.selectDailyQuestions(date).executeAsList()
+    }
+
+    fun getDailyCount(date: String): Long {
+        return queries.selectDailyCount(date).executeAsOne()
+    }
+
+    fun insertDailySelection(questionId: Long, date: String) {
+        queries.insertDailySelection(questionId, date)
+    }
+
+    fun clearDailySelection() {
+        queries.deleteDailySelection()
     }
 }
