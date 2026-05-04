@@ -1,40 +1,53 @@
 package com.dinimiogreniyorum.app.android
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
-// İslami yeşil tema renkleri
-val Green900 = Color(0xFF1B5E20)
-val Green700 = Color(0xFF388E3C)
-val Green500 = Color(0xFF4CAF50)
-val Green100 = Color(0xFFC8E6C9)
-val Gold400  = Color(0xFFFFCA28)
-val Gold200  = Color(0xFFFFF176)
-val Cream    = Color(0xFFFFFDE7)
-val DarkBg   = Color(0xFF121212)
+// androidApp/src/main/java/com/dinimiogreniyorum/app/android/Theme.kt
+
+// --- Renk Güncellemesi ---
+val DeepGreen      = Color(0xFF2D5A27)
+val LeafGreen      = Color(0xFF4CAF50)
+val SoftMint       = Color(0xFFE8F5E9)
+val WarmGold       = Color(0xFFFFC107)
+// Arka planı daha kremsi ve yumuşak bir tona getirdik:
+val WarmCream      = Color(0xFFFDF8E1)
+val LightAmber     = Color(0xFFFFF2D0) // Yüzeyler için biraz daha belirgin sarı/krem
+val TextOlive      = Color(0xFF1B3022)
 
 private val LightColors = lightColorScheme(
-    primary          = Green700,
-    onPrimary        = Color.White,
-    primaryContainer = Green100,
-    onPrimaryContainer = Green900,
-    secondary        = Gold400,
-    onSecondary      = Green900,
-    secondaryContainer = Gold200,
-    background       = Cream,
-    onBackground     = Green900,
-    surface          = Color.White,
-    onSurface        = Green900,
-    surfaceVariant   = Color(0xFFE8F5E9),
-    onSurfaceVariant = Color(0xFF2E7D32)
+    primary            = LeafGreen,
+    onPrimary          = Color.White,
+    primaryContainer   = SoftMint,
+    onPrimaryContainer = DeepGreen,
+    secondary          = WarmGold,
+    onSecondary        = TextOlive,
+    secondaryContainer = LightAmber,
+    background         = WarmCream, // Ana arka plan artık kremsi
+    surface            = Color.White, // Kartlar beyaz kalabilir, böylece krem üzerinde parlar
+    onSurface          = TextOlive,
+    surfaceVariant     = LightAmber,
+    onSurfaceVariant   = DeepGreen
+)
+
+// --- Neşeli Bir UI İçin Yuvarlatılmış Köşeler ---
+val AppShapes = Shapes(
+    extraSmall = RoundedCornerShape(8.dp),
+    small      = RoundedCornerShape(12.dp),
+    medium     = RoundedCornerShape(20.dp), // Kartlar için
+    large      = RoundedCornerShape(28.dp), // Büyük bölümler için
+    extraLarge = RoundedCornerShape(32.dp)
 )
 
 @Composable
 fun DinimOgreniyorumTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = LightColors,
-        typography = Typography(),
-        content = content
+        shapes      = AppShapes, // Şekilleri buraya bağladık
+        typography  = Typography(), // Mevcut tipografini kullanır
+        content     = content
     )
 }

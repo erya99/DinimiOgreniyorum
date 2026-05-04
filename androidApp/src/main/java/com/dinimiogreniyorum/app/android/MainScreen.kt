@@ -1,18 +1,20 @@
 package com.dinimiogreniyorum.app.android
 
-import androidx.activity.compose.BackHandler // EKLENDİ: Geri tuşu kontrolü için
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -23,6 +25,7 @@ import com.dinimiogreniyorum.app.QuizViewModel
 import com.dinimiogreniyorum.app.StatsViewModel
 import com.dinimiogreniyorum.app.DailyViewModel
 
+// Tasarımla uyumlu renkler
 data class CategoryItem(
     val title: String,
     val subtitle: String,
@@ -32,13 +35,13 @@ data class CategoryItem(
 )
 
 val categories = listOf(
-    CategoryItem("Doğru / Yanlış", "Bilgini test et", "TRUE_FALSE", "✅", Color(0xFF43A047)),
-    CategoryItem("Kolay Sorular", "Temel bilgiler", "MULTI_CHOICE_EASY", "🟢", Color(0xFF66BB6A)),
-    CategoryItem("Orta Sorular", "Biraz daha zor", "MULTI_CHOICE_MEDIUM", "🟡", Color(0xFFFFB300)),
-    CategoryItem("Zor Sorular", "Ustalar için", "MULTI_CHOICE_HARD", "🔴", Color(0xFFE53935)),
-    CategoryItem("Eşleştirme", "Doğru eşi bul", "MATCHING", "🔗", Color(0xFF8E24AA)),
-    CategoryItem("Sure Soruları", "Hangi sure?", "SURAH_Q", "📖", Color(0xFF00897B)),
-    CategoryItem("Sure Testi", "Sure adını bil", "SURAH_TEST", "🕌", Color(0xFF1E88E5))
+    CategoryItem("Doğru / Yanlış", "Bilgini test et", "TRUE_FALSE", "✅", Color(0xFF4CAF50)),
+    CategoryItem("Kolay Sorular", "Temel bilgiler", "MULTI_CHOICE_EASY", "🟢", Color(0xFF8BC34A)),
+    CategoryItem("Orta Sorular", "Biraz daha zor", "MULTI_CHOICE_MEDIUM", "🟡", Color(0xFFFFC107)),
+    CategoryItem("Zor Sorular", "Ustalar için", "MULTI_CHOICE_HARD", "🔴", Color(0xFFFF5722)),
+    CategoryItem("Eşleştirme", "Doğru eşi bul", "MATCHING", "🔗", Color(0xFF9C27B0)),
+    CategoryItem("Sure Soruları", "Hangi sure?", "SURAH_Q", "📖", Color(0xFF009688)),
+    CategoryItem("Sure Testi", "Sure adını bil", "SURAH_TEST", "🕌", Color(0xFF03A9F4))
 )
 
 @Composable
@@ -51,7 +54,6 @@ fun MainScreen(
     var showStats by remember { mutableStateOf(false) }
     var showDaily by remember { mutableStateOf(false) }
 
-    // EKLENDİ: Telefonun fiziksel geri tuşunu dinler, uygulamadan çıkmak yerine ana sayfaya döndürür
     BackHandler(enabled = showDaily || showStats || selectedCategory != null) {
         when {
             showDaily -> showDaily = false
@@ -60,25 +62,23 @@ fun MainScreen(
         }
     }
 
-    when {
-        showDaily -> DailyScreen(
-            viewModel = dailyViewModel,
-            onBack = { showDaily = false }
-        )
-        showStats -> StatsScreen(
-            statsViewModel = statsViewModel,
-            onBack = { showStats = false }
-        )
-        selectedCategory != null -> QuizScreen(
-            viewModel = viewModel,
-            category = selectedCategory!!,
-            onBack = { selectedCategory = null }
-        )
-        else -> HomeScreen(
-            onCategorySelected = { selectedCategory = it },
-            onStatsClicked = { showStats = true },
-            onDailyClicked = { showDaily = true }
-        )
+    DinimOgreniyorumTheme { // Temayı burada uyguluyoruz
+        Surface(color = MaterialTheme.colorScheme.background) {
+            when {
+                showDaily -> DailyScreen(viewModel = dailyViewModel, onBack = { showDaily = false })
+                showStats -> StatsScreen(statsViewModel = statsViewModel, onBack = { showStats = false })
+                selectedCategory != null -> QuizScreen(
+                    viewModel = viewModel,
+                    category = selectedCategory!!,
+                    onBack = { selectedCategory = null }
+                )
+                else -> HomeScreen(
+                    onCategorySelected = { selectedCategory = it },
+                    onStatsClicked = { showStats = true },
+                    onDailyClicked = { showDaily = true }
+                )
+            }
+        }
     }
 }
 
@@ -88,135 +88,70 @@ fun HomeScreen(
     onStatsClicked: () -> Unit,
     onDailyClicked: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        // Header Görseli
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Modern Header: Köşeleri yuvarlatılmış ve hafif kırpılmış
         Image(
             painter = painterResource(id = R.drawable.dinimiogreniyorum),
-            contentDescription = "Dinimi Öğreniyorum Başlık Görseli",
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
+                .height(180.dp)
+                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        // Günlük soru banner
+        // Günlük Soru Banner: Gradyan eklenerek canlandırıldı
+        val dailyGradient = Brush.horizontalGradient(
+            colors = listOf(Color(0xFF1976D2), Color(0xFF64B5F6))
+        )
+
         Card(
             onClick = onDailyClicked,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            shape = RoundedCornerShape(16.dp),
-            elevation = CardDefaults.cardElevation(6.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF1565C0))
+            shape = MaterialTheme.shapes.medium,
+            elevation = CardDefaults.cardElevation(8.dp)
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically, // Dikeyde tam ortalama
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .background(dailyGradient)
+                    .padding(20.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // EKLENDİ: Modifier.weight(1f) ile yazılar boşluğu kaplayıp butonu sağa iter
                 Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "🌙 Günün Soruları",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = "Her gün 10 yeni soru seni bekliyor!",
-                        fontSize = 12.sp,
-                        color = Color.White.copy(alpha = 0.8f)
-                    )
+                    Text("🌙 Günün Soruları", style = MaterialTheme.typography.titleMedium, color = Color.White)
+                    Text("10 yeni soru seni bekliyor!", style = MaterialTheme.typography.bodySmall, color = Color.White.copy(alpha = 0.9f))
                 }
-
-                Spacer(modifier = Modifier.width(12.dp)) // EKLENDİ: Yazı ile buton arası mesafe
-
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White.copy(alpha = 0.2f)
-                    )
+                Surface(
+                    color = Color.White.copy(alpha = 0.25f),
+                    shape = CircleShape
                 ) {
-                    // EKLENDİ: Box ile içindeki "Başla" yazısı tam merkeze hizalandı
-                    Box(
-                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "Başla →",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
-                        )
-                    }
+                    Text("Başla →", modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp), color = Color.White, fontWeight = FontWeight.Bold, fontSize = 12.sp)
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            contentPadding = PaddingValues(bottom = 20.dp)
         ) {
             items(categories) { item ->
                 CategoryCard(item = item, onClick = { onCategorySelected(item) })
             }
-            // İstatistik kartı — grid'in son elemanı
             item {
-                Card(
-                    onClick = onStatsClicked,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(110.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(2.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(6.dp)
-                                .fillMaxHeight()
-                                .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-                                .background(Color(0xFF5C6BC0))
-                        )
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 8.dp),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(text = "📊", fontSize = 28.sp)
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Text(
-                                text = "İstatistikler",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 13.sp,
-                                color = Color(0xFF1B5E20)
-                            )
-                            Text(
-                                text = "Gelişimini gör",
-                                fontSize = 11.sp,
-                                color = Color(0xFF757575)
-                            )
-                        }
-                    }
-                }
+                // İstatistik Kartı: Özel tasarım
+                CategoryCard(
+                    item = CategoryItem("İstatistikler", "Gelişimini gör", "STATS", "📊", Color(0xFF5C6BC0)),
+                    onClick = onStatsClicked
+                )
             }
         }
     }
@@ -224,47 +159,50 @@ fun HomeScreen(
 
 @Composable
 fun CategoryCard(item: CategoryItem, onClick: () -> Unit) {
-    Card(
+    ElevatedCard(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .height(110.dp),
-        shape = RoundedCornerShape(16.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+            // height(120.dp) yerine heightIn kullanarak esneklik sağladık
+            .heightIn(min = 110.dp),
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.elevatedCardColors(containerColor = Color.White)
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(2.dp)
+                .padding(12.dp), // Padding'i biraz daraltarak yazı alanını genişlettik
+            verticalArrangement = Arrangement.Center
         ) {
-            Box(
-                modifier = Modifier
-                    .width(6.dp)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(topStart = 16.dp, bottomStart = 16.dp))
-                    .background(item.color)
-            )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 16.dp, top = 12.dp, bottom = 12.dp, end = 8.dp),
-                verticalArrangement = Arrangement.Center
+            // İkon Konteynırı
+            Surface(
+                color = item.color.copy(alpha = 0.15f),
+                shape = CircleShape,
+                modifier = Modifier.size(36.dp) // Boyutu biraz küçülterek yer kazandık
             ) {
-                Text(text = item.emoji, fontSize = 28.sp)
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = item.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    color = Color(0xFF1B5E20)
-                )
-                Text(
-                    text = item.subtitle,
-                    fontSize = 11.sp,
-                    color = Color(0xFF757575)
-                )
+                Box(contentAlignment = Alignment.Center) {
+                    Text(text = item.emoji, fontSize = 18.sp)
+                }
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = item.title,
+                fontWeight = FontWeight.ExtraBold,
+                fontSize = 13.sp, // Fontu hafif küçülttük
+                color = Color(0xFF2D5A27),
+                lineHeight = 16.sp,
+                maxLines = 2 // Başlık çok uzunsa 2 satıra kadar izin verir
+            )
+
+            Text(
+                text = item.subtitle,
+                fontSize = 10.sp,
+                color = Color.Gray,
+                lineHeight = 14.sp,
+                maxLines = 2 // Açıklama artık kesilmeyecek
+            )
         }
     }
 }
