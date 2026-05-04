@@ -4,8 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.systemBarsPadding // EKLENDİ: Alt ve üst sistem çubukları için
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.dinimiogreniyorum.app.DailyViewModel
 import com.dinimiogreniyorum.app.QuestionRepository
 import com.dinimiogreniyorum.app.QuizViewModel
@@ -16,20 +18,13 @@ import com.dinimiogreniyorum.db.createDatabase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Splash Screen'i başlat
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
 
-        // DailySelection tablosu yoksa oluştur
-        val dbHelper = this.openOrCreateDatabase("dinimogreniyorum.db", MODE_PRIVATE, null)
-        dbHelper.execSQL(
-            """
-            CREATE TABLE IF NOT EXISTS DailySelection (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                questionId INTEGER NOT NULL,
-                selectedDate TEXT NOT NULL
-            )
-            """.trimIndent()
-        )
-        dbHelper.close()
+        // Manuel tablo oluşturma (dbHelper) kodları BURADAN SİLİNDİ.
+        // SQLDelight tabloları AppDatabase.sq üzerinden otomatik yönetecek.
 
         val database = createDatabase(DatabaseDriverFactory(this))
         val repository = QuestionRepository(database)
@@ -40,7 +35,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             DinimOgreniyorumTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
+                // EKLENDİ: systemBarsPadding() eklendi. Artık ekranın altındaki telefon menüsü uygulamanı yutmayacak.
+                Surface(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
                     MainScreen(
                         viewModel = viewModel,
                         statsViewModel = statsViewModel,

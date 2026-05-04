@@ -48,4 +48,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.kotlinx.coroutines.android)
     debugImplementation(libs.compose.ui.tooling)
+    implementation("androidx.core:core-splashscreen:1.0.1")
 }

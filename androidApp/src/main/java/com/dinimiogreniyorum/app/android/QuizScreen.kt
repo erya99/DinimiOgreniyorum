@@ -47,39 +47,44 @@ fun QuizScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header
+        // YENİLENEN HEADER: Row kullanılarak ikon ve başlık dikeyde tam hizalandı
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(
                     Brush.verticalGradient(listOf(Color(0xFF2E7D32), Color(0xFF43A047)))
                 )
-                .padding(horizontal = 16.dp, vertical = 20.dp)
+                .padding(horizontal = 12.dp, vertical = 20.dp) // padding biraz toparlandı
         ) {
-            IconButton(
-                onClick = onBack,
-                modifier = Modifier.align(Alignment.CenterStart)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically // Ok ve Yazıyı dikeyde merkeze alır
             ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Geri",
-                    tint = Color.White
-                )
-            }
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = category.emoji,
-                    fontSize = 24.sp
-                )
-                Text(
-                    text = category.title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
+                // Sol taraftaki geri oku
+                IconButton(onClick = onBack) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Geri",
+                        tint = Color.White
+                    )
+                }
+
+                // Geri kalan alanı kapla ve içindeki yazıları merkeze hizala
+                Column(
+                    modifier = Modifier.weight(1f).padding(end = 48.dp), // Okun kapladığı alan kadar sağdan boşluk (tam ortalamak için)
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = category.emoji,
+                        fontSize = 24.sp
+                    )
+                    Text(
+                        text = category.title,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                }
             }
         }
 

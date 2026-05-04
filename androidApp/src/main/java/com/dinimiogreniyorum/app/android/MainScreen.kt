@@ -1,5 +1,7 @@
 package com.dinimiogreniyorum.app.android
 
+import androidx.activity.compose.BackHandler // EKLENDİ: Geri tuşu kontrolü için
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,10 +13,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dinimiogreniyorum.app.QuizViewModel
@@ -49,6 +51,15 @@ fun MainScreen(
     var showStats by remember { mutableStateOf(false) }
     var showDaily by remember { mutableStateOf(false) }
 
+    // EKLENDİ: Telefonun fiziksel geri tuşunu dinler, uygulamadan çıkmak yerine ana sayfaya döndürür
+    BackHandler(enabled = showDaily || showStats || selectedCategory != null) {
+        when {
+            showDaily -> showDaily = false
+            showStats -> showStats = false
+            selectedCategory != null -> selectedCategory = null
+        }
+    }
+
     when {
         showDaily -> DailyScreen(
             viewModel = dailyViewModel,
@@ -82,37 +93,15 @@ fun HomeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // Header — istatistik butonu kaldırıldı
-        Box(
+        // Header Görseli
+        Image(
+            painter = painterResource(id = R.drawable.dinimiogreniyorum),
+            contentDescription = "Dinimi Öğreniyorum Başlık Görseli",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(listOf(Color(0xFF2E7D32), Color(0xFF43A047)))
-                )
-                .padding(horizontal = 24.dp, vertical = 36.dp)
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("☪", fontSize = 40.sp, color = Color(0xFFFFCA28))
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Dinimİ Öğreniyorum",
-                    fontSize = 26.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Bir kategori seçerek başla",
-                    fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.8f),
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
+                .height(200.dp)
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -130,10 +119,11 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp, vertical = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalAlignment = Alignment.CenterVertically, // Dikeyde tam ortalama
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column {
+                // EKLENDİ: Modifier.weight(1f) ile yazılar boşluğu kaplayıp butonu sağa iter
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = "🌙 Günün Soruları",
                         fontSize = 16.sp,
@@ -146,19 +136,27 @@ fun HomeScreen(
                         color = Color.White.copy(alpha = 0.8f)
                     )
                 }
+
+                Spacer(modifier = Modifier.width(12.dp)) // EKLENDİ: Yazı ile buton arası mesafe
+
                 Card(
                     shape = RoundedCornerShape(12.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = Color.White.copy(alpha = 0.2f)
                     )
                 ) {
-                    Text(
-                        text = "Başla →",
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
-                    )
+                    // EKLENDİ: Box ile içindeki "Başla" yazısı tam merkeze hizalandı
+                    Box(
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Başla →",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 13.sp
+                        )
+                    }
                 }
             }
         }

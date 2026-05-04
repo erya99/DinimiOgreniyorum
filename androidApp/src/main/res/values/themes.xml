@@ -1,0 +1,16 @@
+<resources>
+    <!-- Ana uygulamanın teması (seninki farklı bir isimde olabilir) -->
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <!-- ... -->
+    </style>
+
+    <!-- Splash Screen Teması -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Açılış ekranının arka plan rengi -->
+        <item name="windowSplashScreenBackground">#FFFFFF</item>
+        <!-- Ortada görünecek ikon (Bir önceki adımda ürettiğin ikon) -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
+        <!-- Splash bitince geçilecek ana tema -->
+        <item name="postSplashScreenTheme">@style/AppTheme</item>
+    </style>
+</resources>
