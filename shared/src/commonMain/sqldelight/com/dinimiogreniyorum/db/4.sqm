@@ -2,3 +2,5 @@
 -- Bu işlem, SeedData.kt içindeki isEmpty() şartını "True" yapacak.
 DELETE FROM Question WHERE category = 'MULTI_CHOICE_MEDIUM';
 DELETE FROM Question WHERE category = 'MULTI_CHOICE_HARD';
+DELETE FROM Question WHERE category = 'MULTI_CHOICE_EASY';
+DELETE FROM Question WHERE category = 'GENERAL_TEST';

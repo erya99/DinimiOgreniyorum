@@ -11,6 +11,9 @@ class SeedData(private val repository: QuestionRepository) {
         if (repository.getQuestionsByCategory("SURAH_TEST").isEmpty()) seedSurahTest()
         if (repository.getQuestionsByCategory("MATCHING").isEmpty()) seedMatching()
         if (repository.getQuestionsByCategory("DAILY_POOL").isEmpty()) seedDailyPool()
+
+        // GENEL TEST ALT KATEGORİLERİ KONTROLÜ
+        if (repository.getQuestionsByCategory("GEN_TEMEL").isEmpty()) seedGeneralTests()
     }
 
     private fun seedTrueFalse() {
@@ -243,6 +246,259 @@ class SeedData(private val repository: QuestionRepository) {
         )
         questions.forEach { q ->
             repository.insertQuestion("DAILY_POOL", "EASY", q[0], q[1], q[2], "")
+        }
+    }
+
+    private fun seedGeneralTests() {
+        val generalQuestions = mapOf(
+            "GEN_TEMEL" to listOf(
+                listOf("İslam'ın kaç şartı vardır?", "5", "3|4|5|6"),
+                listOf("Kur'an kaç sureden oluşur?", "114", "99|110|114|120"),
+                listOf("Günde kaç vakit namaz kılınır?", "5", "3|4|5|6"),
+                listOf("Hangi ay oruç tutulur?", "Ramazan", "Şaban|Muharrem|Ramazan|Zilhicce"),
+                listOf("Kabe hangi şehirdedir?", "Mekke", "Medine|Mekke|Kudüs|Taif"),
+                listOf("İmanın kaç şartı vardır?", "6", "4|5|6|7"),
+                listOf("Fatiha suresi kaç ayettir?", "7", "5|6|7|8"),
+                listOf("En uzun sure hangisidir?", "Bakara", "Al-i İmran|Nisa|Bakara|Maide"),
+                listOf("Hac hangi ayda yapılır?", "Zilhicce", "Muharrem|Ramazan|Şevval|Zilhicce"),
+                listOf("İslam'ın ilk emri nedir?", "Oku (İkra)", "Namaz kıl|Oruç tut|Oku (İkra)|Haccet")
+            ),
+            "GEN_KURAN" to listOf(
+                listOf("Kur'an kaç cüzden oluşur?", "30", "20|25|30|40"),
+                listOf("Kur'an'ın ilk suresi hangisidir?", "Fatiha", "Bakara|Fatiha|İhlas|Nas"),
+                listOf("Kur'an'ın son suresi hangisidir?", "Nas", "Felak|İhlas|Nas|Kevser"),
+                listOf("En kısa sure hangisidir?", "Kevser", "İhlas|Nas|Kevser|Asr"),
+                listOf("İhlas suresi kaç ayettir?", "4", "3|4|5|6"),
+                listOf("Kur'an kaç yılda tamamlandı?", "23", "10|15|23|30"),
+                listOf("Kur'an hangi dilde indirilmiştir?", "Arapça", "Farsça|Türkçe|Arapça|İbranice"),
+                listOf("Ayetel Kürsi hangi surede yer alır?", "Bakara", "Al-i İmran|Bakara|Nisa|Maide"),
+                listOf("Kur'an'da kaç ayet vardır?", "6236", "5000|6000|6236|7000"),
+                listOf("Kur'an'ın diğer adı nedir?", "Furkan", "Kitap|Furkan|Zebur|İncil")
+            ),
+            "GEN_NAMAZ" to listOf(
+                listOf("Sabah namazı kaç rekattır?", "2", "2|3|4|5"),
+                listOf("Öğle namazı kaç rekattır (farz)?", "4", "2|3|4|6"),
+                listOf("İkindi namazı kaç rekattır (farz)?", "4", "2|3|4|6"),
+                listOf("Akşam namazı kaç rekattır (farz)?", "3", "2|3|4|5"),
+                listOf("Yatsı namazı kaç rekattır (farz)?", "4", "2|3|4|6"),
+                listOf("Cuma namazı hangi vakitte kılınır?", "Öğle vakti", "Sabah vakti|Öğle vakti|İkindi vakti|Akşam vakti"),
+                listOf("Namazda kıble hangi yöndür?", "Kabe yönü", "Doğu|Batı|Kabe yönü|Kuzey"),
+                listOf("Namazın farzlarından biri hangisidir?", "Kıyam", "Niyet etmemek|Kıyam|Konuşmak|Yemek yemek"),
+                listOf("Namaza başlarken ne söylenir?", "Allahu Ekber", "Bismillah|Elhamdülillah|Allahu Ekber|Sübhanallah"),
+                listOf("Namazda oturuşta ne okunur?", "Ettehiyyatü", "Fatiha|Ettehiyyatü|İhlas|Felak")
+            ),
+            "GEN_ORUC" to listOf(
+                listOf("Ramazan ayı kaç gündür?", "29 veya 30", "25|28|29 veya 30|31"),
+                listOf("Orucu bozan şeylerden biri hangisidir?", "Yemek yemek", "Uyumak|Yürümek|Yemek yemek|Düşünmek"),
+                listOf("Oruç ne zaman başlar?", "İmsak vakti", "Gün doğumu|Öğle|İmsak vakti|Akşam"),
+                listOf("Oruç ne zaman bozulur?", "İftar vakti", "Öğle|Akşan ezanıyla|İftar vakti|Gece yarısı"),
+                listOf("Ramazan ayında kaç gece Kadir Gecesi aranır?", "Son 10 gece", "İlk 10 gece|Orta 10 gece|Son 10 gece|Tüm ay"),
+                listOf("Sahur ne demektir?", "İmsak öncesi yenen yemek", "İftar yemeği|Öğle yemeği|İmsak öncesi yenen yemek|Akşam yemeği"),
+                listOf("Fitre ne zaman verilir?", "Ramazan Bayramı öncesi", "Kurban Bayramı|Ramazan başında|Ramazan Bayramı öncesi|Her Cuma"),
+                listOf("Oruç hangi dini görevin şartıdır?", "İslam'ın şartı", "Namazın şartı|İslam'ın şartı|Haccın şartı|Zekatın şartı"),
+                listOf("Hasta olan biri orucunu ne zaman kaza eder?", "İyileşince", "Hemen|Ramazanda|İyileşince|Hiç kazası yok"),
+                listOf("Ramazan ayında oruç kaçıncı İslam şartıdır?", "3. şart", "1. şart|2. şart|3. şart|4. şart")
+            ),
+            "GEN_ZEKAT_HAC" to listOf(
+                listOf("Zekat vermek kimin üzerine farzdır?", "Nisaba ulaşan Müslüman", "Herkes|Sadece zenginler|Nisaba ulaşan Müslüman|Sadece erkekler"),
+                listOf("Hac kaçıncı İslam şartıdır?", "5. şart", "3. şart|4. şart|5. şart|6. şart"),
+                listOf("Hac ibadeti hangi şehirlerde yapılır?", "Mekke ve Medine", "Mekke ve Kudüs|Mekke ve Medine|Medine ve Taif|Mekke ve Taif"),
+                listOf("Hacda Arafat'ta durma ne zaman yapılır?", "9 Zilhicce", "7 Zilhicce|8 Zilhicce|9 Zilhicce|10 Zilhicce"),
+                listOf("Zekat oranı ne kadardır?", "Kırkta bir (1/40)", "Onda bir|Yirmide bir|Kırkta bir (1/40)|Ellide bir"),
+                listOf("Kurban Bayramı kaç günüdür?", "4 gün", "2 gün|3 gün|4 gün|5 gün"),
+                listOf("Kurban hangi bayramda kesilir?", "Kurban Bayramı", "Ramazan Bayramı|Kurban Bayramı|Her iki bayramda|Cuma günleri"),
+                listOf("Tavaf ne demektir?", "Kabe'yi 7 kez dolaşmak", "Safa-Merve arası yürümek|Kabe'yi 7 kez dolaşmak|Arafat'ta beklemek|Zemzem içmek"),
+                listOf("Sa'y ne demektir?", "Safa ile Merve arasında yürümek", "Kabe'yi dolaşmak|Safa ile Merve arasında yürümek|Taş atmak|Kurban kesmek"),
+                listOf("Zemzem nerededir?", "Mekke'de Kabe yakınında", "Medine'de|Kudüs'te|Mekke'de Kabe yakınında|Taif'te")
+            ),
+            "GEN_PEYGAMBERLER" to listOf(
+                listOf("İslam'ın son peygamberi kimdir?", "Hz. Muhammed", "Hz. İsa|Hz. Musa|Hz. Muhammed|Hz. İbrahim"),
+                listOf("İlk peygamber kimdir?", "Hz. Adem", "Hz. Nuh|Hz. İbrahim|Hz. Adem|Hz. İdris"),
+                listOf("Kur'an hangi peygambere indirilmiştir?", "Hz. Muhammed", "Hz. İsa|Hz. Musa|Hz. Muhammed|Hz. Davud"),
+                listOf("Tevrat hangi peygambere indirilmiştir?", "Hz. Musa", "Hz. İsa|Hz. Musa|Hz. Davud|Hz. İbrahim"),
+                listOf("İncil hangi peygambere indirilmiştir?", "Hz. İsa", "Hz. İsa|Hz. Musa|Hz. Muhammed|Hz. Davud"),
+                listOf("Zebur hangi peygambere indirilmiştir?", "Hz. Davud", "Hz. İsa|Hz. Musa|Hz. Davud|Hz. Süleyman"),
+                listOf("Hz. Muhammed nerede doğmuştur?", "Mekke", "Medine|Mekke|Taif|Kudüs"),
+                listOf("Hz. Muhammed kaç yaşında peygamber oldu?", "40", "25|30|40|45"),
+                listOf("Hz. Muhammed'in babası kimdir?", "Hz. Abdullah", "Hz. Ömer|Hz. Abdullah|Hz. Ebubekir|Hz. Ali"),
+                listOf("Hz. Muhammed'in annesi kimdir?", "Hz. Amine", "Hz. Hatice|Hz. Amine|Hz. Fatıma|Hz. Ayşe")
+            ),
+            "GEN_SIYER" to listOf(
+                listOf("Hz. Muhammed kaç yılında doğdu?", "571", "550|560|571|580"),
+                listOf("Hz. Muhammed'in ilk eşi kimdir?", "Hz. Hatice", "Hz. Ayşe|Hz. Hatice|Hz. Fatıma|Hz. Zeynep"),
+                listOf("Hicret hangi şehirden hangi şehire yapıldı?", "Mekke'den Medine'ye", "Medine'den Mekke'ye|Mekke'den Medine'ye|Taif'ten Mekke'ye|Mekke'den Kudüs'e"),
+                listOf("Miraç ne demektir?", "Hz. Muhammed'in göğe yükselmesi", "Hicret|Hz. Muhammed'in göğe yükselmesi|Kabe'nin inşası|İlk vahiy"),
+                listOf("İlk vahiy hangi mağarada geldi?", "Hira Mağarası", "Sevr Mağarası|Hira Mağarası|Uhud Mağarası|Kuba Mağarası"),
+                listOf("Hz. Muhammed kaç yaşında vefat etti?", "63", "55|60|63|70"),
+                listOf("Hz. Muhammed'in kızı kimdir?", "Hz. Fatıma", "Hz. Ayşe|Hz. Fatıma|Hz. Hatice|Hz. Zeynep"),
+                listOf("Hz. Muhammed'in damadı kimdir?", "Hz. Ali", "Hz. Ömer|Hz. Ebubekir|Hz. Ali|Hz. Osman"),
+                listOf("Medine'deki ilk mescit hangisidir?", "Mescid-i Kuba", "Mescid-i Nebevi|Mescid-i Kuba|Mescid-i Haram|Mescid-i Aksa"),
+                listOf("Hz. Muhammed'in lakabı nedir?", "El-Emin (Güvenilir)", "El-Aziz|El-Emin (Güvenilir)|El-Hakim|El-Kadir")
+            ),
+            "GEN_HALIFELER" to listOf(
+                listOf("İlk halife kimdir?", "Hz. Ebubekir", "Hz. Ömer|Hz. Ebubekir|Hz. Osman|Hz. Ali"),
+                listOf("İkinci halife kimdir?", "Hz. Ömer", "Hz. Ebubekir|Hz. Ömer|Hz. Osman|Hz. Ali"),
+                listOf("Üçüncü halife kimdir?", "Hz. Osman", "Hz. Ömer|Hz. Ali|Hz. Osman|Hz. Talha"),
+                listOf("Dördüncü halife kimdir?", "Hz. Ali", "Hz. Hasan|Hz. Hüseyin|Hz. Ali|Hz. Zübeyr"),
+                listOf("Dört halifeye ne denir?", "Hulefa-i Raşidin", "Sahabe|Hulefa-i Raşidin|Tabiin|Evliya")
+            ),
+            "GEN_IMAN" to listOf(
+                listOf("İmanın şartlarından biri hangisidir?", "Allah'a iman", "Namaz kılmak|Allah'a iman|Oruç tutmak|Zekat vermek"),
+                listOf("Meleklere iman etmek kaçıncı iman şartıdır?", "2. şart", "1. şart|2. şart|3. şart|4. şart"),
+                listOf("Kader ve kazaya iman etmek kaçıncı iman şartıdır?", "6. şart", "3. şart|4. şart|5. şart|6. şart"),
+                listOf("Ahirete iman etmek kaçıncı iman şartıdır?", "5. şart", "3. şart|4. şart|5. şart|6. şart"),
+                listOf("Peygamberlere iman etmek kaçıncı iman şartıdır?", "3. şart", "1. şart|2. şart|3. şart|4. şart"),
+                listOf("Kitaplara iman etmek kaçıncı iman şartıdır?", "4. şart", "2. şart|3. şart|4. şart|5. şart"),
+                listOf("İslam'da Allah'ın birliğine ne denir?", "Tevhid", "Şirk|Tevhid|Küfür|Nifak"),
+                listOf("Allah'a ortak koşmaya ne denir?", "Şirk", "Küfür|Nifak|Şirk|Bid'at"),
+                listOf("İslam'da Allah'ın sıfatlarından biri hangisidir?", "Hay (Diri olan)", "Ölümlü|Hay (Diri olan)|Yorulan|Uyuyan"),
+                listOf("Allah'ın varlığına ve birliğine şahitlik etmeye ne denir?", "Kelime-i Şehadet", "Besmele|Fatiha|Kelime-i Şehadet|Salavat")
+            ),
+            "GEN_MELEKLER" to listOf(
+                listOf("Vahiy meleği hangisidir?", "Cebrail", "Mikail|Cebrail|İsrafil|Azrail"),
+                listOf("Yağmur ve rızıktan sorumlu melek hangisidir?", "Mikail", "Cebrail|Mikail|İsrafil|Azrail"),
+                listOf("Ölüm meleği hangisidir?", "Azrail", "Cebrail|Mikail|İsrafil|Azrail"),
+                listOf("Sura üfleyecek melek hangisidir?", "İsrafil", "Cebrail|Mikail|İsrafil|Azrail"),
+                listOf("İnsanların amellerini yazan melekler hangisidir?", "Kiramen Katibin", "Münker ve Nekir|Kiramen Katibin|Hafaza melekleri|Hamele-i Arş"),
+                listOf("Kabir sorgusunu yapan melekler kimlerdir?", "Münker ve Nekir", "Kiramen Katibin|Münker ve Nekir|Cebrail ve Mikail|Hafaza melekleri"),
+                listOf("Cennet kapılarını koruyan melek kimdir?", "Rıdvan", "Cebrail|Azrail|Rıdvan|Malik"),
+                listOf("Cehennem bekçisi olan melek kimdir?", "Malik", "Cebrail|Rıdvan|Malik|Mikail")
+            ),
+            "GEN_AHLAK_IBADET" to listOf(
+                listOf("Bismillah ne anlama gelir?", "Allah'ın adıyla", "Allah büyüktür|Allah'ın adıyla|Allah'a hamdolsun|Allah'tan başka ilah yoktur"),
+                listOf("Elhamdülillah ne anlama gelir?", "Hamd Allah'a mahsustur", "Allah büyüktür|Allah'ın adıyla|Hamd Allah'a mahsustur|Allah dilerse"),
+                listOf("Allahu Ekber ne anlama gelir?", "Allah en büyüktür", "Allah birdir|Allah'ın adıyla|Allah en büyüktür|Allah yaratıcıdır"),
+                listOf("Sübhanallah ne anlama gelir?", "Allah her türlü eksiklikten münezzehtir", "Allah büyüktür|Allah'a hamdolsun|Allah her türlü eksiklikten münezzehtir|Allah'a şükürler"),
+                listOf("İnşallah ne anlama gelir?", "Allah dilerse", "Allah büyüktür|Allah dilerse|Allah'a sığınırım|Allah'a hamdolsun"),
+                listOf("Maşallah ne anlama gelir?", "Allah ne dilemiş (güzel)", "Allah büyüktür|Allah dilerse|Allah ne dilemiş (güzel)|Allah korusun"),
+                listOf("Abdest almak hangi ibadetin ön şartıdır?", "Namaz", "Oruç|Hac|Namaz|Zekat"),
+                listOf("Gusül abdesti ne zaman gerekir?", "Cünüp olunca", "Her namazdan önce|Uyku sonrası|Cünüp olunca|Her gün"),
+                listOf("Teyemmüm ne demektir?", "Toprakla abdest almak", "Suyla abdest|Toprakla abdest almak|Dua etmek|Sadaka vermek"),
+                listOf("Kıble ne demektir?", "Namaz kılınırken yönelinen yön", "Namaz vakti|Namaz kılınırken yönelinen yön|Namaz yeri|Namaz duası")
+            ),
+            "GEN_BAYRAMLAR" to listOf(
+                listOf("Ramazan Bayramı kaç gündür?", "3 gün", "2 gün|3 gün|4 gün|5 gün"),
+                listOf("Kurban Bayramı ne zaman başlar?", "10 Zilhicce", "8 Zilhicce|9 Zilhicce|10 Zilhicce|11 Zilhicce"),
+                listOf("Kadir Gecesi hangi ayda aranır?", "Ramazan", "Şaban|Muharrem|Ramazan|Zilhicce"),
+                listOf("Cuma namazı haftanın hangi günü kılınır?", "Cuma", "Çarşamba|Perşembe|Cuma|Cumartesi"),
+                listOf("Müslümanların bayramları kaç tanedir?", "2", "1|2|3|4"),
+                listOf("Mevlid Kandili neyi kutlar?", "Hz. Muhammed'in doğumunu", "Hz. Muhammed'in vefatını|Hz. Muhammed'in doğumunu|İlk vahyi|Hicret'i"),
+                listOf("Regaib Kandili hangi ayda kutlanır?", "Recep", "Şaban|Recep|Ramazan|Zilhicce"),
+                listOf("Mirac Kandili hangi olayı kutlar?", "Hz. Muhammed'in miracını", "Hicret|Hz. Muhammed'in doğumunu|Hz. Muhammed'in miracını|İlk vahyi"),
+                listOf("Berat Kandili hangi ayda kutlanır?", "Şaban", "Recep|Şaban|Ramazan|Muharrem"),
+                listOf("Aşure Günü hangi ayın 10. günüdür?", "Muharrem", "Recep|Şaban|Ramazan|Muharrem")
+            ),
+            "GEN_AHIRET" to listOf(
+                listOf("İslam'da öldükten sonra gidilen iyi yer neresidir?", "Cennet", "Araf|Cehennem|Cennet|Berzah"),
+                listOf("İslam'da günahkarların gideceği yer neresidir?", "Cehennem", "Araf|Berzah|Cennet|Cehennem"),
+                listOf("Kıyamet gününün diğer adı nedir?", "Ahiret", "Berzah|Araf|Ahiret|Mizan"),
+                listOf("Ölümden sonra dirilişe ne denir?", "Haşr (Ba's)", "Kıyamet|Hesap|Haşr (Ba's)|Mizan"),
+                listOf("Amel defteri nedir?", "İnsanların yaptıklarının yazıldığı kayıt", "Kur'an|Hadis|İnsanların yaptıklarının yazıldığı kayıt|Dua kitabı"),
+                listOf("Sırat köprüsü nedir?", "Cehennemi geçen köprü", "Cennete giriş kapısı|Cehennemi geçen köprü|Hesap yeri|Bekleme alanı"),
+                listOf("Cennetin kaç kapısı vardır?", "8", "4|6|7|8"),
+                listOf("Cehennemin kaç kapısı vardır?", "7", "4|5|6|7"),
+                listOf("Araf ne demektir?", "Cennet ve cehennem arası yer", "Cennet|Cehennem|Cennet ve cehennem arası yer|Dünya"),
+                listOf("Hesap günü ne zaman gerçekleşir?", "Kıyametten sonra", "Ölümden hemen sonra|Kıyametten sonra|Mezarda|Dünyada")
+            ),
+            "GEN_SURELER" to listOf(
+                listOf("Yasin suresi kaçıncı suredir?", "36", "32|34|36|38"),
+                listOf("Mülk suresi kaçıncı suredir?", "67", "65|66|67|68"),
+                listOf("Nebe suresi kaçıncı suredir?", "78", "75|76|78|80"),
+                listOf("Fatiha suresinde geçen 'sırat' ne anlama gelir?", "Yol", "Cennet|Nimet|Yol|Doğruluk"),
+                listOf("İhlas suresi neyi anlatır?", "Allah'ın birliğini", "Kıyameti|Allah'ın birliğini|Ahireti|Peygamberi"),
+                listOf("Felak suresi neyi anlatır?", "Şerden Allah'a sığınmayı", "Cenneti|Allah'ın sıfatlarını|Şerden Allah'a sığınmayı|Peygamberi"),
+                listOf("Nas suresi kime hitap eder?", "İnsanlara", "Meleklere|Cinlere|İnsanlara|Peygambere"),
+                listOf("Asr suresi kaç ayettir?", "3", "2|3|4|5"),
+                listOf("Fil suresi hangi olayı anlatır?", "Kabe'ye fil ordusu saldırısını", "Tufanı|Kabe'ye fil ordusu saldırısını|Hicret'i|Miraci"),
+                listOf("Kureyş suresi hangi kabileyi anlatır?", "Kureyş kabilesini", "Evs kabilesini|Hazrec kabilesini|Kureyş kabilesini|Ensar kabilesini")
+            ),
+            "GEN_TERIMLER" to listOf(
+                listOf("'Salat' ne demektir?", "Namaz", "Oruç|Hac|Namaz|Zekat"),
+                listOf("'Savm' ne demektir?", "Oruç", "Namaz|Oruç|Hac|Zekat"),
+                listOf("'Hajj' ne demektir?", "Hac", "Namaz|Oruç|Hac|Zekat"),
+                listOf("'Zakat' ne demektir?", "Zekat (arınma/bağış)", "Namaz|Oruç|Hac|Zekat (arınma/bağış)"),
+                listOf("'Şehadet' ne demektir?", "Tanıklık/şahitlik", "Namaz|Oruç|Tanıklık/şahitlik|Dua"),
+                listOf("'Dua' ne demektir?", "Allah'a yalvarmak/istemek", "Namaz kılmak|Allah'a yalvarmak/istemek|Oruç tutmak|Zekat vermek"),
+                listOf("'Farz' ne demektir?", "Zorunlu/yapılması gereken", "Zorunlu/yapılması gereken|Yasak|İsteğe bağlı|Tavsiye edilen"),
+                listOf("'Haram' ne demektir?", "Kesinlikle yasak olan", "Zorunlu|Tavsiye edilen|Kesinlikle yasak olan|Mekruh"),
+                listOf("'Helal' ne demektir?", "Dinen serbest olan", "Yasak olan|Dinen serbest olan|Zorunlu olan|Tavsiye edilen"),
+                listOf("'Sünnet' ne demektir?", "Hz. Muhammed'in yolu/uygulaması", "Kur'an ayeti|Hz. Muhammed'in yolu/uygulaması|Farz ibadet|Haram davranış")
+            ),
+            "GEN_TARIH" to listOf(
+                listOf("İslam ne zaman ortaya çıktı?", "610 yılında", "500|570|610|650"),
+                listOf("Hicret hangi yılda gerçekleşti?", "622", "610|615|622|630"),
+                listOf("Mekke'nin fethi hangi yılda oldu?", "630", "620|625|630|635"),
+                listOf("Hz. Muhammed hangi yılda vefat etti?", "632", "628|630|632|635"),
+                listOf("İslam takvimi hangi olaydan başlar?", "Hicret'ten", "Hz. Muhammed'in doğumundan|İlk vahiyden|Hicret'ten|Mekke fethinden"),
+                listOf("İslam takviminde yıl ne ile adlandırılır?", "Hicri yıl", "Miladi yıl|Hicri yıl|Rumi yıl|Kamerî yıl"),
+                listOf("Hz. Muhammed'in doğduğu yer neresidir?", "Mekke", "Medine|Mekke|Taif|Kudüs"),
+                listOf("İlk Müslümanlardan biri olan Hz. Hatice kimdir?", "Hz. Muhammed'in eşi", "Hz. Muhammed'in annesi|Hz. Muhammed'in eşi|Hz. Muhammed'in kızı|Hz. Muhammed'in kız kardeşi"),
+                listOf("Bedir Savaşı hangi yılda oldu?", "624", "620|622|624|626"),
+                listOf("Uhud Savaşı hangi yılda oldu?", "625", "622|623|625|627")
+            ),
+            "GEN_DEGERLER" to listOf(
+                listOf("İslam'da yalan söylemek nasıl değerlendirilir?", "Günah", "Sevap|Günah|Mubah|Tavsiye edilen"),
+                listOf("İslam'da anne-babaya saygı nasıl değerlendirilir?", "Farzdır", "İsteğe bağlıdır|Farzdır|Sünnettir|Tavsiye edilmez"),
+                listOf("İslam'da komşu hakkına riayet etmek nasıldır?", "Önemlidir", "Önemsizdir|Önemlidir|İsteğe bağlıdır|Yasaklanmıştır"),
+                listOf("İslam'da hırsızlık nasıl değerlendirilir?", "Haramdır", "Helaldir|Mekruhtur|Haramdır|Müstehaptır"),
+                listOf("İslam'da sadaka vermek nasıldır?", "Sevaptır", "Günahtır|Mekruhtur|Sevaptır|Farzdır"),
+                listOf("İslam'da doğruluk ve dürüstlük nasıl değerlendirilir?", "Erdemlidir", "Zayıflıktır|Erdemlidir|Zararlıdır|Önemsizdir"),
+                listOf("İslam'da emanete ihanet etmek nasıldır?", "Haramdır", "Helaldir|Mekruhtur|Haramdır|Sünnettir"),
+                listOf("İslam'da büyüklere saygı nasıldır?", "Önemlidir", "Önemsizdir|Önemlidir|Yasaklanmıştır|Zayıflıktır"),
+                listOf("İslam'da çevre temizliği nasıl değerlendirilir?", "İmanın gereğidir", "Önemsizdir|İmanın gereğidir|Yasaklanmıştır|İsteğe bağlıdır"),
+                listOf("İslam'da selamlama nasıldır?", "Sünnettir", "Haramdır|Farzdır|Sünnettir|Mekruhtur")
+            ),
+            "GEN_YAYILIS" to listOf(
+                listOf("İslam'ın ilk yayıldığı bölge neresidir?", "Arabistan Yarımadası", "Anadolu|Mısır|Arabistan Yarımadası|İran"),
+                listOf("İlk İslam devleti nerede kuruldu?", "Medine", "Mekke|Medine|Şam|Bağdat"),
+                listOf("İslam'ın yayılmasında en büyük etken nedir?", "Tebliğ ve örnek yaşam", "Savaş|Ticaret|Tebliğ ve örnek yaşam|Göç"),
+                listOf("Ensar ne demektir?", "Yardımcılar (Medineli Müslümanlar)", "Mekke'den göç edenler|Yardımcılar (Medineli Müslümanlar)|İlk Müslümanlar|Sahabeler"),
+                listOf("Muhacir ne demektir?", "Hicret eden (Mekke'den göç eden) Müslümanlar", "Yardımcılar|Hicret eden (Mekke'den göç eden) Müslümanlar|İlk Müslümanlar|Peygamberin arkadaşları")
+            ),
+            "GEN_EK_KURAN" to listOf(
+                listOf("Namazda kaç defa secde edilir (bir rekatta)?", "2", "1|2|3|4"),
+                listOf("Cuma günü hangi sure okunması tavsiye edilir?", "Kehf suresi", "Yasin suresi|Kehf suresi|Mülk suresi|Bakara suresi"),
+                listOf("Teravih namazı hangi ayda kılınır?", "Ramazan", "Şaban|Recep|Ramazan|Zilhicce"),
+                listOf("Vitir namazı hangi vakit kılınır?", "Yatsıdan sonra", "Sabahtan önce|Öğleden sonra|Yatsıdan sonra|İkindiden sonra"),
+                listOf("Cenaze namazında kaç tekbir alınır?", "4", "2|3|4|5"),
+                listOf("Kıraet ne demektir?", "Kur'an okumak", "Namaz kılmak|Oruç tutmak|Kur'an okumak|Dua etmek"),
+                listOf("Ruku nedir?", "Namazda eğilmek", "Namazda oturmak|Namazda eğilmek|Namazda kalkmak|Namazda yürümek"),
+                listOf("Secde nedir?", "Alnı yere koymak", "Eğilmek|Alnı yere koymak|Ayağa kalkmak|Oturmak"),
+                listOf("Kıyam ne demektir?", "Namazda ayakta durmak", "Namazda oturmak|Namazda eğilmek|Namazda ayakta durmak|Namazda secde etmek"),
+                listOf("Ka'de ne demektir?", "Namazda oturmak", "Namazda ayakta durmak|Namazda oturmak|Namazda secde etmek|Namazda eğilmek")
+            ),
+            "GEN_EK_KAVRAMLAR" to listOf(
+                listOf("Tevbe ne demektir?", "Günahtan dönmek/pişman olmak", "Dua etmek|Namaz kılmak|Günahtan dönmek/pişman olmak|Oruç tutmak"),
+                listOf("İstiğfar ne demektir?", "Allah'tan bağışlanma dilemek", "Şükretmek|Allah'tan bağışlanma dilemek|Namaz kılmak|Dua etmek"),
+                listOf("Şükür ne demektir?", "Nimetler için Allah'a minnettar olmak", "Namaz kılmak|Nimetler için Allah'a minnettar olmak|Oruç tutmak|Zekat vermek"),
+                listOf("Tevekkül ne demektir?", "Allah'a güvenmek ve dayanmak", "Tembellik etmek|Allah'a güvenmek ve dayanmak|Dua etmemek|Çalışmamak"),
+                listOf("Sabır ne demektir?", "Zorluklara dayanmak", "Acele etmek|Zorluklara dayanmak|Şikayet etmek|Vazgeçmek"),
+                listOf("Hidayet ne demektir?", "Doğru yolu bulmak", "Yanlış yola gitmek|Doğru yolu bulmak|Günah işlemek|Allah'ı inkâr etmek"),
+                listOf("Tövbe-i nasuh ne demektir?", "Samimi ve kararlı tövbe", "Günaha devam etmek|Samimi ve kararlı tövbe|Kısa süreli pişmanlık|Başkası için dua etmek"),
+                listOf("Rıza ne demektir?", "Allah'ın hükmüne razı olmak", "İsyan etmek|Allah'ın hükmüne razı olmak|Şikayet etmek|Nankör olmak"),
+                listOf("Huşu ne demektir?", "İbadette derin saygı ve dikkat", "İbadeti terk etmek|İbadette derin saygı ve dikkat|İbadeti aceleye getirmek|İbadetten kaçmak"),
+                listOf("Takva ne demektir?", "Allah'tan korkarak günahtan kaçınmak", "Allah'ı sevmemek|Allah'tan korkarak günahtan kaçınmak|Dünyayı sevmek|İbadeti terk etmek")
+            ),
+            "GEN_EK_TAMAM" to listOf(
+                listOf("Hz. İbrahim'in ateşe atılmasına rağmen yanmaması hangi olayı anlatır?", "Allah'ın onu korumasını", "Mucize|Allah'ın onu korumasını|Sihir|Tesadüf"),
+                listOf("Hz. Musa'nın denizi yarması nasıl gerçekleşti?", "Allah'ın mucizesiyle", "Sihirle|Allah'ın mucizesiyle|Kendi gücüyle|Meleklerin yardımıyla"),
+                listOf("Hz. Nuh'un gemisi hangi dağa oturmuştur?", "Cudi Dağı", "Ağrı Dağı|Cudi Dağı|Everest|Sinai Dağı"),
+                listOf("İslam'da namazın önemi nedir?", "Dinin direğidir", "İsteğe bağlıdır|Dinin direğidir|Sadece Cuma kılınır|Yaşlılara farzdır"),
+                listOf("Hangi sure 'Kur'an'ın kalbi' olarak bilinir?", "Yasin suresi", "Fatiha suresi|Bakara suresi|Yasin suresi|Mülk suresi"),
+                listOf("Kelime-i Tevhid nedir?", "Lailahe illallah", "Bismillah|Elhamdülillah|Lailahe illallah|Allahu Ekber"),
+                listOf("İslam'da en büyük günah nedir?", "Şirk (Allah'a ortak koşmak)", "Yalan söylemek|Şirk (Allah'a ortak koşmak)|Hırsızlık|Zina"),
+                listOf("Sahabe ne demektir?", "Hz. Muhammed'i gören ve ona inanan kişi", "Hz. Muhammed'in akrabaları|Hz. Muhammed'i gören ve ona inanan kişi|İlk halifelar|Kur'an hafızları"),
+                listOf("Hadis ne demektir?", "Hz. Muhammed'in söz ve davranışları", "Kur'an ayetleri|Hz. Muhammed'in söz ve davranışları|Dini kitaplar|Alim görüşleri"),
+                listOf("Fıkıh ne demektir?", "İslam hukuku", "Kur'an tefsiri|Hadis bilimi|İslam hukuku|Kelam ilmi"),
+                listOf("Tefsir ne demektir?", "Kur'an'ı açıklama ve yorumlama", "Hadis ezberlemek|Kur'an'ı açıklama ve yorumlama|Namaz kılmak|Dua etmek")
+            )
+        )
+
+        // Verileri veritabanına ekle
+        generalQuestions.forEach { (categoryId, questions) ->
+            questions.forEach { q ->
+                repository.insertQuestion(categoryId, "EASY", q[0], q[1], q[2], "")
+            }
         }
     }
 

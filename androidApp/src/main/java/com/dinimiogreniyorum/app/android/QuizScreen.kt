@@ -323,7 +323,7 @@ fun FinishScreen(score: Int, total: Int, onRestart: () -> Unit, onBack: () -> Un
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
         ) {
-            Text("Tekrar Oyna", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Text("Tekrar Dene", fontSize = 16.sp, fontWeight = FontWeight.Bold)
         }
         Spacer(modifier = Modifier.height(12.dp))
         OutlinedButton(

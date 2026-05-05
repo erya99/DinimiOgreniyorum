@@ -27,7 +27,29 @@ val categoryNames = mapOf(
     "MATCHING" to "Eşleştirme",
     "SURAH_Q" to "Sure Soruları",
     "SURAH_TEST" to "Sure Testi",
-    "DAILY_POOL" to "Günün Soruları"
+    "DAILY_POOL" to "Günün Soruları",
+    // 21 Yeni Genel Test Kategorisi
+    "GEN_TEMEL" to "Temel Bilgiler",
+    "GEN_KURAN" to "Kur'an Bilgisi",
+    "GEN_NAMAZ" to "Namaz",
+    "GEN_ORUC" to "Oruç",
+    "GEN_ZEKAT_HAC" to "Zekat ve Hac",
+    "GEN_PEYGAMBERLER" to "Peygamberler",
+    "GEN_SIYER" to "Hz. Muhammed",
+    "GEN_HALIFELER" to "Dört Halife",
+    "GEN_IMAN" to "İman Esasları",
+    "GEN_MELEKLER" to "Melekler",
+    "GEN_AHLAK_IBADET" to "Ahlak ve İbadet",
+    "GEN_BAYRAMLAR" to "Bayramlar",
+    "GEN_AHIRET" to "Cennet/Cehennem",
+    "GEN_SURELER" to "Sureler",
+    "GEN_TERIMLER" to "Dini Terimler",
+    "GEN_TARIH" to "Tarihi Bilgiler",
+    "GEN_DEGERLER" to "Ahlak/Değerler",
+    "GEN_YAYILIS" to "İslam'ın Yayılışı",
+    "GEN_EK_KURAN" to "Ek: İbadet",
+    "GEN_EK_KAVRAMLAR" to "Ek: Kavramlar",
+    "GEN_EK_TAMAM" to "Tamamlayıcı"
 )
 
 val categoryEmojis = mapOf(
@@ -38,7 +60,29 @@ val categoryEmojis = mapOf(
     "MATCHING" to "🔗",
     "SURAH_Q" to "📖",
     "SURAH_TEST" to "🕌",
-    "DAILY_POOL" to "🌙"
+    "DAILY_POOL" to "🌙",
+    // 21 Yeni Genel Test Emojisi
+    "GEN_TEMEL" to "🕋",
+    "GEN_KURAN" to "📖",
+    "GEN_NAMAZ" to "🧎",
+    "GEN_ORUC" to "🌙",
+    "GEN_ZEKAT_HAC" to "🕋",
+    "GEN_PEYGAMBERLER" to "📜",
+    "GEN_SIYER" to "🌹",
+    "GEN_HALIFELER" to "⚖️",
+    "GEN_IMAN" to "✨",
+    "GEN_MELEKLER" to "👼",
+    "GEN_AHLAK_IBADET" to "🤲",
+    "GEN_BAYRAMLAR" to "🎉",
+    "GEN_AHIRET" to "⚖️",
+    "GEN_SURELER" to "📿",
+    "GEN_TERIMLER" to "🔤",
+    "GEN_TARIH" to "⏳",
+    "GEN_DEGERLER" to "🤝",
+    "GEN_YAYILIS" to "🌍",
+    "GEN_EK_KURAN" to "📚",
+    "GEN_EK_KAVRAMLAR" to "🧠",
+    "GEN_EK_TAMAM" to "🧩"
 )
 
 @Composable
@@ -57,7 +101,6 @@ fun StatsScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        // GÜNCELLENEN HEADER: QuizScreen ile aynı simetrik hizalama
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,7 +142,6 @@ fun StatsScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Genel özet kartları
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -126,9 +168,7 @@ fun StatsScreen(
                 }
             }
 
-            // Genel başarı oranı
             item {
-                // PERFORMANS OPTİMİZASYONU: Hesaplama remember içine alındı
                 val successRate = remember(state.totalAttempts, state.totalCorrect) {
                     if (state.totalAttempts > 0)
                         (state.totalCorrect * 100f / state.totalAttempts).toInt()
@@ -163,7 +203,7 @@ fun StatsScreen(
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         LinearProgressIndicator(
-                            progress = successRate / 100f, // Lambda kaldırıldı, direkt değer verildi
+                            progress = successRate / 100f,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(10.dp),
@@ -190,7 +230,6 @@ fun StatsScreen(
                 }
             }
 
-            // Kategori başlığı
             item {
                 Text(
                     text = "Kategorilere Göre",
@@ -201,7 +240,6 @@ fun StatsScreen(
                 )
             }
 
-            // Kategori istatistikleri
             if (state.categoryStats.isEmpty()) {
                 item {
                     Card(
@@ -221,9 +259,7 @@ fun StatsScreen(
                     }
                 }
             } else {
-                // PERFORMANS OPTİMİZASYONU: "key = { it.category }" eklendi. Liste kayarken kasmayı %90 azaltır.
                 items(state.categoryStats, key = { it.category }) { stat ->
-                    // Hesaplama performanslı hale getirildi
                     val rate = remember(stat.attempted, stat.correct) {
                         if (stat.attempted > 0)
                             (stat.correct * 100f / stat.attempted).toInt()
@@ -324,7 +360,7 @@ fun CategoryStatCard(
             }
             Spacer(modifier = Modifier.height(8.dp))
             LinearProgressIndicator(
-                progress = rate / 100f, // Lambda kaldırıldı
+                progress = rate / 100f,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(6.dp),
