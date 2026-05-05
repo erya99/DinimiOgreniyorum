@@ -1,0 +1,4 @@
+-- Karışmış ve eksik olan Orta ve Zor soruları veritabanından siliyoruz.
+-- Bu işlem, SeedData.kt içindeki isEmpty() şartını "True" yapacak.
+DELETE FROM Question WHERE category = 'MULTI_CHOICE_MEDIUM';
+DELETE FROM Question WHERE category = 'MULTI_CHOICE_HARD';

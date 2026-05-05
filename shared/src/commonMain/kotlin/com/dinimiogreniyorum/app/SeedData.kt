@@ -87,7 +87,7 @@ class SeedData(private val repository: QuestionRepository) {
             listOf("Hz. Peygamber'in ilk vahyi aldığı mağara hangisidir?", "Hira", "Sevr|Hira|Uhud|Badr"),
             listOf("İslam'da 'İcma' ne demektir?", "Müctehitlerin görüş birliği", "Kıyas yöntemi|Müctehitlerin görüş birliği|Hadis ilmi|Kuran tefsiri"),
             listOf("Bedir Savaşı hangi yılda yapıldı?", "624", "620|622|624|626"),
-            listOf("Kur'an'da kaç sure vardır ve kaç ayettir?", "114 sure, 6236 ayet", "99 sure 5000 ayet|114 sure 6236 ayet|110 sure 6000 ayet|120 sure 7000 ayet"),
+            listOf("Kur'an'da kaç sure vardır ve kaç ayettir?", "114 sure 6236 ayet", "99 sure 5000 ayet|114 sure 6236 ayet|110 sure 6000 ayet|120 sure 7000 ayet"),
             listOf("İslam'ın yayıldığı ilk şehir hangisidir?", "Mekke", "Medine|Kudüs|Mekke|Taif")
         )
         questions.forEach { q ->
