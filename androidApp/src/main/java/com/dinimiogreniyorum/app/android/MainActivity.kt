@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.systemBarsPadding // EKLENDİ: Alt ve üst sistem çubukları için
+import androidx.compose.material3.MaterialTheme // GÜNCELLEME İÇİN EKLENDİ
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -36,7 +37,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             DinimOgreniyorumTheme {
                 // EKLENDİ: systemBarsPadding() eklendi. Artık ekranın altındaki telefon menüsü uygulamanı yutmayacak.
-                Surface(modifier = Modifier.fillMaxSize().systemBarsPadding()) {
+                // GÜNCELLEME: Surface rengi 'background' olarak ayarlandı.
+                // Böylece Theme.kt'deki kremsi arka plan devreye girecek ve IslamicBackground motifleri görünür olacak.
+                Surface(
+                    modifier = Modifier.fillMaxSize().systemBarsPadding(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     MainScreen(
                         viewModel = viewModel,
                         statsViewModel = statsViewModel,

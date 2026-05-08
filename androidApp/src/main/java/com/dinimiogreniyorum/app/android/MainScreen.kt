@@ -1,7 +1,7 @@
 package com.dinimiogreniyorum.app.android
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.Image
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -14,19 +14,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.Shadow
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dinimiogreniyorum.app.QuizViewModel
 import com.dinimiogreniyorum.app.StatsViewModel
 import com.dinimiogreniyorum.app.DailyViewModel
 
-// Tasarımla uyumlu renkler
+// Tasarımla uyumlu renkler ve kategoriler (Değiştirilmedi)[cite: 1]
 data class CategoryItem(
     val title: String,
     val subtitle: String,
@@ -43,10 +44,9 @@ val categories = listOf(
     CategoryItem("Eşleştirme", "Doğru eşi bul", "MATCHING", "🔗", Color(0xFF9C27B0)),
     CategoryItem("Sure Soruları", "Hangi sure?", "SURAH_Q", "📖", Color(0xFF009688)),
     CategoryItem("Sure Testi", "Sure adını bil", "SURAH_TEST", "🕌", Color(0xFF03A9F4)),
-    CategoryItem("Genel Testler", "Tüm Konular", "GENERAL_MENU", "📚", Color(0xFFE91E63)) // Yeni Genel Test Butonu
+    CategoryItem("Genel Testler", "Tüm Konular", "GENERAL_MENU", "📚", Color(0xFFE91E63))
 )
 
-// 21 Başlıklı Genel Test Alt Kategorileri
 val generalSubCategories = listOf(
     CategoryItem("Temel Bilgiler", "İslam'ın şartları", "GEN_TEMEL", "🕋", Color(0xFF4CAF50)),
     CategoryItem("Kur'an Bilgisi", "Kur'an-ı Kerim", "GEN_KURAN", "📖", Color(0xFF009688)),
@@ -92,23 +92,31 @@ fun MainScreen(
     }
 
     DinimOgreniyorumTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            when {
-                showDaily -> DailyScreen(viewModel = dailyViewModel, onBack = { showDaily = false })
-                showStats -> StatsScreen(statsViewModel = statsViewModel, onBack = { showStats = false })
-                showGeneralMenu -> GeneralMenuScreen(
+        when {
+            showDaily -> IslamicBackground(ScreenType.QUIZ) {
+                DailyScreen(viewModel = dailyViewModel, onBack = { showDaily = false })
+            }
+            showStats -> IslamicBackground(ScreenType.STATISTICS) {
+                StatsScreen(statsViewModel = statsViewModel, onBack = { showStats = false })
+            }
+            showGeneralMenu -> IslamicBackground(ScreenType.HOME) {
+                GeneralMenuScreen(
                     onSubCategorySelected = {
                         selectedCategory = it
                         showGeneralMenu = false
                     },
                     onBack = { showGeneralMenu = false }
                 )
-                selectedCategory != null -> QuizScreen(
+            }
+            selectedCategory != null -> IslamicBackground(ScreenType.QUIZ) {
+                QuizScreen(
                     viewModel = viewModel,
                     category = selectedCategory!!,
                     onBack = { selectedCategory = null }
                 )
-                else -> HomeScreen(
+            }
+            else -> IslamicBackground(ScreenType.HOME) {
+                HomeScreen(
                     onCategorySelected = {
                         if (it.category == "GENERAL_MENU") {
                             showGeneralMenu = true
@@ -130,19 +138,64 @@ fun HomeScreen(
     onStatsClicked: () -> Unit,
     onDailyClicked: () -> Unit
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.dinimiogreniyorum),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(180.dp)
-                .clip(RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(50.dp))
+
+        // --- ANIMASYONLU TOMBUL BAŞLIK ---
+        val infiniteTransition = rememberInfiniteTransition(label = "TitleGradient")
+        val offset by infiniteTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1000f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 3000, easing = LinearEasing),
+                repeatMode = RepeatMode.Reverse
+            ), label = "GradientOffset"
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        val animatedBrush = Brush.linearGradient(
+            colors = listOf(
+                Color(0xFF2D5A27), // DeepGreen
+                Color(0xFF4CAF50), // LeafGreen
+                Color(0xFFFFC107)  // WarmGold
+            ),
+            start = Offset(offset, offset),
+            end = Offset(offset + 300f, offset + 300f)
+        )
 
+        Text(
+            text = "Dinimi\nÖğreniyorum",
+            fontSize = 42.sp,
+            lineHeight = 46.sp,
+            style = TextStyle(
+                brush = animatedBrush,
+                fontWeight = FontWeight.Black,
+                textAlign = TextAlign.Center,
+                letterSpacing = 1.sp,
+                shadow = Shadow(
+                    color = Color.Black.copy(alpha = 0.15f),
+                    offset = Offset(4f, 4f),
+                    blurRadius = 8f
+                )
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Text(
+            text = "Bir kategori seçerek başla",
+            fontSize = 15.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF1B3022).copy(alpha = 0.6f),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(35.dp))
+
+        // Günün Soruları Kartı
         val dailyGradient = Brush.horizontalGradient(
             colors = listOf(Color(0xFF1976D2), Color(0xFF64B5F6))
         )
@@ -196,7 +249,6 @@ fun HomeScreen(
     }
 }
 
-// Yeni Alt Menü Ekranı (2 Sütunlu Izgara)
 @Composable
 fun GeneralMenuScreen(
     onSubCategorySelected: (CategoryItem) -> Unit,
@@ -227,7 +279,6 @@ fun GeneralMenuScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        // 21 Kategori olduğu için 2 sütunlu yapıldı
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier.padding(horizontal = 16.dp),
